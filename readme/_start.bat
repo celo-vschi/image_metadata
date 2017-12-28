@@ -1,0 +1,1 @@
+java -jar image_metadata-1.0-jar-with-dependencies.jar > log.txt
