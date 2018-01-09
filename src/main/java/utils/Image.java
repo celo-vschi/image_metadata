@@ -23,14 +23,16 @@ public class Image {
 		}
 		createCopy(path);
 	}
-
+	
 	private static void createCopy(Path path) {
 		String name = getImageFutureName(path);
 		if (name != null) {
 			try {
 				Files.copy(path, Utils.IMG_DIR.resolve(name));
 			} catch (IOException e) {
-				Utils.printError(e, "Problem while copying file <" + path.toAbsolutePath() + ">");
+				String image = path.toAbsolutePath().toString();
+				Utils.printError(e, "Problem while copying file <" + image + ">");
+				Utils.addImageToSpecials(image, e);
 			}
 		}
 	}
@@ -54,8 +56,9 @@ public class Image {
 			ExifSubIFDDirectory directory = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
 			return directory.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
 		} catch (Exception e) {
-			Utils.printError(e, "File <" + path.toAbsolutePath() + "> does not have EXIF metadata!");
-			//TODO: add image to special file ...
+			String image = path.toAbsolutePath().toString();
+			Utils.printError(e, "File <" + image + "> does not have EXIF metadata!");
+			Utils.addImageToSpecials(image, e);
 		}
 		return null;
 	}
