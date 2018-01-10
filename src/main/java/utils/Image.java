@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.TimeZone;
 
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.metadata.Metadata;
@@ -15,7 +16,7 @@ import com.drew.metadata.exif.ExifSubIFDDirectory;
 
 public class Image {
 
-	private final static DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd hh.mm.ss");
+	private final static DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH.mm.ss");
 	
 	public static void renameToOriginalDate(Path path) {
 		if (!isImage(path.toString())) {
@@ -54,7 +55,7 @@ public class Image {
 		try {
 			Metadata metadata = ImageMetadataReader.readMetadata(file);
 			ExifSubIFDDirectory directory = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
-			return directory.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
+			return directory.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL, null, TimeZone.getDefault());
 		} catch (Exception e) {
 			String image = path.toAbsolutePath().toString();
 			Utils.printError(e, "File <" + image + "> does not have EXIF metadata!");
